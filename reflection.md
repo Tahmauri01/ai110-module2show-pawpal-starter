@@ -2,6 +2,29 @@
 
 ## 1. System Design
 
+Core actions:
+1. Add pet
+2. Schedule feeding time
+3. Order todays tasks
+
+Main Objects:
+
+Task(class):
+Attributes - taskId, name, time, priority, isComplete
+Methods - markComplete(), updateDuration(), updatePriority(), viewTaskDetails(), updateTask()
+
+Pet(class):
+Attributes - petId, name, owner, age, breed
+Methods -  updatePet(), viewPetDetails(), viewPetTasks()
+
+Owner(class):
+Attributes - ownerId, name, pets
+Methods - updateOwner(), viewOwnerDetails(), viewOwnerPets()
+
+Schedule(class):
+Attributes - schkdultId, date, task, owner, pet
+Methods - generateSchedule(), updateSchedule(), viewSchedule(), addTask(), removeTask()
+
 **a. Initial design**
 
 - Briefly describe your initial UML design.
