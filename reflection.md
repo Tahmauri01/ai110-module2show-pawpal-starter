@@ -28,12 +28,22 @@ Methods - generateSchedule(), updateSchedule(), viewSchedule(), addTask(), remov
 **a. Initial design**
 
 - Briefly describe your initial UML design.
+
+My initial design contains four classes: Schedule, Owner, Pet, and Task. Schedule is 1-to-1 with Owner and Pet sincea schedule shouldn't have multiple owners and pets. Owner is 1-to-0 with Pet since an owner can have multiple pets while a pet has one owner. Pet is 1-to-0 with Task since a pet can have multple tasks while a task should be assigned to one pet. Schedule is 1-to-0 with task since the schedule can have multple tasks while the task should only be assigned to one schedule.
+
 - What classes did you include, and what responsibilities did you assign to each?
+
+Schedule contains the date of when the tasks are to be completed. Owner is tied to each of their pets and is responsible for making the tasks and schedule. Pet is what is assigned to the tasks. Tasks belong to the pets and are displayed by the schedule.
 
 **b. Design changes**
 
 - Did your design change during implementation?
+
+Yes
+
 - If yes, describe at least one change and why you made it.
+
+The Pet class was not linked to the Tasks class so a list had to be created for Pet which was stored into Pet.tasks. This change was made because the Task class was linked to the Pet class so the Pet class needed a way to see it's tasks. It was a list since Pet is 1-to-0 to Task.
 
 ---
 

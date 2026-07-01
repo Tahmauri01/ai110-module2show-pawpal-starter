@@ -9,12 +9,6 @@ class Task:
     def mark_complete(self):
         pass
 
-    def update_duration(self):
-        pass
-
-    def update_priority(self):
-        pass
-
     def view_task_details(self):
         pass
 
@@ -23,12 +17,13 @@ class Task:
 
 
 class Pet:
-    def __init__(self, pet_id, name, owner, age, breed):
+    def __init__(self, pet_id, name, owner_id, age, breed):
         self.pet_id = pet_id
         self.name = name
-        self.owner = owner
+        self.owner_id = owner_id
         self.age = age
         self.breed = breed
+        self.tasks = []
 
     def update_pet(self):
         pass
@@ -41,10 +36,10 @@ class Pet:
 
 
 class Owner:
-    def __init__(self, owner_id, name, pets):
+    def __init__(self, owner_id, name):
         self.owner_id = owner_id
         self.name = name
-        self.pets = pets
+        self.pets = []
 
     def update_owner(self):
         pass
@@ -57,12 +52,12 @@ class Owner:
 
 
 class Schedule:
-    def __init__(self, schedule_id, date, tasks, owner, pet):
+    def __init__(self, schedule_id, date, owner, pet):
         self.schedule_id = schedule_id
         self.date = date
-        self.tasks = tasks
         self.owner = owner
         self.pet = pet
+        self.tasks = pet.tasks
 
     def generate_schedule(self):
         pass
