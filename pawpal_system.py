@@ -1,11 +1,14 @@
 PRIORITY_LABELS = {1: "Low", 2: "Medium", 3: "High"}
+FREQUENCY_DAYS = {1: "Monday", 2: "Tuesday", 3: "Wednesday", 4: "Thursday", 5: "Friday", 6: "Saturday", 7: "Sunday"}
 
 class Task:
-    def __init__(self, task_id, name, time, priority, is_complete=False):
+    def __init__(self, task_id, name, time, priority, frequency, description, is_complete=False):
         self.task_id = task_id
         self.name = name
         self.time = time
         self.priority = priority
+        self.frequency = frequency
+        self.description = description
         self.is_complete = is_complete
 
     def mark_complete(self):
@@ -21,18 +24,26 @@ class Task:
 
         priority_label = PRIORITY_LABELS.get(self.priority, str(self.priority))
 
-        print(f"Task:     {self.name}")
-        print(f"Time:     {formatted_time}")
-        print(f"Priority: {priority_label}")
-        print(f"Complete: {self.is_complete}")
+        frequency_label = FREQUENCY_DAYS.get(self.frequency, str(self.frequency))
 
-    def update_task(self, name=None, time=None, priority=None):
+        print(f"Task:        {self.name}")
+        print(f"Description: {self.description}")
+        print(f"Time:        {formatted_time}")
+        print(f"Frequency:   {frequency_label}")
+        print(f"Priority:    {priority_label}")
+        print(f"Complete:    {self.is_complete}")
+
+    def update_task(self, name=None, time=None, priority=None, frequency=None, description=None):
         if name is not None:
             self.name = name
         if time is not None:
             self.time = time
         if priority is not None:
             self.priority = priority
+        if frequency is not None:
+            self.frequency = frequency
+        if description is not None:
+            self.description = description
 
 
 class Pet:
@@ -44,14 +55,28 @@ class Pet:
         self.breed = breed
         self.tasks = []
 
-    def update_pet(self):
-        pass
+    def update_pet(self, name=None, age=None, breed=None):
+        if name is not None:
+            self.name = name
+        if age is not None:
+            self.age = age
+        if breed is not None:
+            self.breed = breed
 
-    def view_pet_details(self):
-        pass
+    def view_pet_details(self, owner):
+        print(f"Name:  {self.name}")
+        print(f"Age:   {self.age}")
+        print(f"Breed: {self.breed}")
+        print(f"Owner: {owner.name} (ID: {self.owner_id})")
 
     def view_pet_tasks(self):
-        pass
+        if not self.tasks:
+            print(f"{self.name} has no tasks.")
+            return
+        print(f"Tasks for {self.name}:")
+        for i, task in enumerate(self.tasks, start=1):
+            print(f"\n  Task {i}:")
+            task.view_task_details()
 
 
 class Owner:
