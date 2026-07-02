@@ -247,14 +247,16 @@ class Schedule:
             display_hour = 12
         return f"{display_hour}:{minute:02d} {period}"
 
-    def _print_task_list(self, task_list):
+    def _print_task_list(self, task_list, filter_day=None):
         if not task_list:
             print("No tasks to display.")
             return
-        # Expand each task into one entry per day so multi-day tasks appear under each day.
+        # When filter_day is set, only stamp the task under that day.
+        # Otherwise expand to all days so multi-day tasks appear under each one.
         expanded = []
         for task, pet in task_list:
-            for day in task.frequency:
+            days = [filter_day] if filter_day is not None else task.frequency
+            for day in days:
                 expanded.append((day, task.time, task, pet))
         expanded.sort(key=lambda item: (item[0], item[1]))
 
@@ -276,6 +278,8 @@ class Schedule:
             print("  4. Day of week")
             choice = input("Choose an option: ")
 
+            #TODO: add filter by dog name
+
             if choice == "1":
                 print("Select priority:")
                 for k, v in PRIORITY_LABELS.items():
@@ -284,7 +288,7 @@ class Schedule:
                 filtered = [(t, p) for t, p in self.tasks if t.priority == priority]
                 break
             elif choice == "2":
-                keyword = input("Enter name to search: ").lower()
+                keyword = input("Enter name to search: ").strip().lower()
                 filtered = [(t, p) for t, p in self.tasks if keyword in t.name.lower()]
                 break
             elif choice == "3":
@@ -297,7 +301,8 @@ class Schedule:
                     print(f"  {k}. {v}")
                 day = int(input("Enter number: "))
                 filtered = [(t, p) for t, p in self.tasks if day in t.frequency]
-                break
+                self._print_task_list(filtered, filter_day=day)
+                return
             else:
                 print("Invalid option. Please try again.")
 
