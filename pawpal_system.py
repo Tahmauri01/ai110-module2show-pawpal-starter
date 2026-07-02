@@ -85,14 +85,35 @@ class Owner:
         self.name = name
         self.pets = []
 
-    def update_owner(self):
-        pass
+    def add_pet(self, name, age, breed):
+        pet_id = len(self.pets) + 1
+        new_pet = Pet(pet_id, name, self.owner_id, age, breed)
+        self.pets.append(new_pet)
+        return new_pet
+
+    def remove_pet(self, pet_id):
+        self.pets = [pet for pet in self.pets if pet.pet_id != pet_id]
+
+    def update_owner(self, name=None, add_pet=None, remove_pet_id=None):
+        if name is not None:
+            self.name = name
+        if add_pet is not None:
+            self.add_pet(add_pet["name"], add_pet["age"], add_pet["breed"])
+        if remove_pet_id is not None:
+            self.remove_pet(remove_pet_id)
 
     def view_owner_details(self):
-        pass
+        print(f"Owner:    {self.name}")
+        print(f"Owner ID: {self.owner_id}")
+        self.view_owner_pets()
 
     def view_owner_pets(self):
-        pass
+        if not self.pets:
+            print("No pets registered.")
+            return
+        print(f"Pets owned by {self.name}:")
+        for pet in self.pets:
+            print(f"  - {pet.name} (Pet ID: {pet.pet_id}, Owner ID: {pet.owner_id})")
 
 
 class Schedule:
