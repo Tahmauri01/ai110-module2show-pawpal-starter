@@ -1,5 +1,7 @@
+PRIORITY_LABELS = {1: "Low", 2: "Medium", 3: "High"}
+
 class Task:
-    def __init__(self, task_id, name, time, priority, is_complete):
+    def __init__(self, task_id, name, time, priority, is_complete=False):
         self.task_id = task_id
         self.name = name
         self.time = time
@@ -7,13 +9,30 @@ class Task:
         self.is_complete = is_complete
 
     def mark_complete(self):
-        pass
+        self.is_complete = True
 
     def view_task_details(self):
-        pass
+        hour, minute = map(int, self.time.split(":"))
+        period = "AM" if hour < 12 else "PM"
+        display_hour = hour if hour <= 12 else hour - 12
+        if display_hour == 0:
+            display_hour = 12
+        formatted_time = f"{display_hour}:{minute:02d} {period}"
 
-    def update_task(self):
-        pass
+        priority_label = PRIORITY_LABELS.get(self.priority, str(self.priority))
+
+        print(f"Task:     {self.name}")
+        print(f"Time:     {formatted_time}")
+        print(f"Priority: {priority_label}")
+        print(f"Complete: {self.is_complete}")
+
+    def update_task(self, name=None, time=None, priority=None):
+        if name is not None:
+            self.name = name
+        if time is not None:
+            self.time = time
+        if priority is not None:
+            self.priority = priority
 
 
 class Pet:
