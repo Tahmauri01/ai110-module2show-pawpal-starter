@@ -12,9 +12,11 @@ class Task:
         self.is_complete = is_complete
 
     def mark_complete(self):
+        """Mark this task as complete."""
         self.is_complete = True
 
     def view_task_details(self):
+        """Print all details of the task including time, frequency, priority, and completion status."""
         hour, minute = map(int, self.time.split(":"))
         period = "AM" if hour < 12 else "PM"
         display_hour = hour if hour <= 12 else hour - 12
@@ -34,6 +36,7 @@ class Task:
         print(f"Complete:    {self.is_complete}")
 
     def update_task(self, name=None, time=None, priority=None, frequency=None, description=None):
+        """Update any combination of the task's name, time, priority, frequency, or description."""
         if name is not None:
             self.name = name
         if time is not None:
@@ -56,6 +59,7 @@ class Pet:
         self.tasks = []
 
     def update_pet(self, name=None, age=None, breed=None):
+        """Update any combination of the pet's name, age, or breed."""
         if name is not None:
             self.name = name
         if age is not None:
@@ -64,12 +68,14 @@ class Pet:
             self.breed = breed
 
     def view_pet_details(self, owner):
+        """Print the pet's name, age, breed, and the name of its owner."""
         print(f"Name:  {self.name}")
         print(f"Age:   {self.age}")
         print(f"Breed: {self.breed}")
         print(f"Owner: {owner.name} (ID: {self.owner_id})")
 
     def view_pet_tasks(self):
+        """Print the full details of every task assigned to this pet."""
         if not self.tasks:
             print(f"{self.name} has no tasks.")
             return
@@ -86,15 +92,18 @@ class Owner:
         self.pets = []
 
     def add_pet(self, name, age, breed):
+        """Create a new Pet tied to this owner and add it to the owner's pet list."""
         pet_id = len(self.pets) + 1
         new_pet = Pet(pet_id, name, self.owner_id, age, breed)
         self.pets.append(new_pet)
         return new_pet
 
     def remove_pet(self, pet_id):
+        """Remove the pet with the given pet_id from the owner's pet list."""
         self.pets = [pet for pet in self.pets if pet.pet_id != pet_id]
 
     def update_owner(self, name=None, add_pet=None, remove_pet_id=None):
+        """Update the owner's name or add/remove a pet by calling add_pet() or remove_pet()."""
         if name is not None:
             self.name = name
         if add_pet is not None:
@@ -103,11 +112,13 @@ class Owner:
             self.remove_pet(remove_pet_id)
 
     def view_owner_details(self):
+        """Print the owner's name and ID, then list all their pets."""
         print(f"Owner:    {self.name}")
         print(f"Owner ID: {self.owner_id}")
         self.view_owner_pets()
 
     def view_owner_pets(self):
+        """Print the name and ID of every pet registered to this owner."""
         if not self.pets:
             print("No pets registered.")
             return
@@ -125,6 +136,7 @@ class Schedule:
         self.tasks = []
 
     def generate_schedule(self):
+        """Collect all tasks from every pet owned by this owner into the schedule."""
         self.tasks = []
         for pet in self.owner.pets:
             for task in pet.tasks:
@@ -132,6 +144,7 @@ class Schedule:
         print(f"Schedule generated for {self.owner.name} with {len(self.tasks)} task(s).")
 
     def add_task(self):
+        """Prompt the user for task details and add the new task to a chosen pet and the schedule."""
         if not self.owner.pets:
             print("This owner has no pets.")
             return
@@ -164,6 +177,7 @@ class Schedule:
         print(f"Task '{name}' added for {pet.name}.")
 
     def remove_task(self):
+        """Prompt the user to select a task and remove it from both the schedule and its pet."""
         if not self.tasks:
             print("No tasks in schedule.")
             return
@@ -179,6 +193,7 @@ class Schedule:
         print(f"Task '{task_to_remove.name}' removed.")
 
     def update_schedule(self):
+        """Interactively add, remove, edit, or mark complete a task on the schedule."""
         while True:
             print("1. Add task")
             print("2. Remove task")
@@ -240,6 +255,7 @@ class Schedule:
                 print("Invalid option. Please try again.")
 
     def _format_time(self, time_str):
+        """Convert a 24-hour HH:MM string to a 12-hour AM/PM formatted string."""
         hour, minute = map(int, time_str.split(":"))
         period = "AM" if hour < 12 else "PM"
         display_hour = hour if hour <= 12 else hour - 12
@@ -248,6 +264,7 @@ class Schedule:
         return f"{display_hour}:{minute:02d} {period}"
 
     def _print_task_list(self, task_list, filter_day=None):
+        """Print a task list grouped and sorted by day then time; filter_day restricts output to one day."""
         if not task_list:
             print("No tasks to display.")
             return
@@ -270,6 +287,7 @@ class Schedule:
             print(f"  [{self._format_time(task.time)}] {task.name} — {pet.name} (Priority: {priority_label})")
 
     def filter_view(self):
+        """Prompt the user to choose a filter (priority, name, time, or day) and display matching tasks."""
         while True:
             print("Filter by:")
             print("  1. Priority")
@@ -309,6 +327,7 @@ class Schedule:
         self._print_task_list(filtered)
 
     def view_schedule(self):
+        """Display the full schedule or a filtered view, ordered by day of week then time."""
         if not self.tasks:
             print("Schedule is empty. Run generate_schedule() first.")
             return
