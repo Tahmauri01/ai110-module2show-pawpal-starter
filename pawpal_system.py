@@ -1,6 +1,15 @@
 PRIORITY_LABELS = {1: "Low", 2: "Medium", 3: "High"}
 FREQUENCY_DAYS = {1: "Monday", 2: "Tuesday", 3: "Wednesday", 4: "Thursday", 5: "Friday", 6: "Saturday", 7: "Sunday"}
 
+def _format_time(time_str):
+    """Convert a 24-hour HH:MM string to a 12-hour AM/PM formatted string."""
+    hour, minute = map(int, time_str.split(":"))
+    period = "AM" if hour < 12 else "PM"
+    display_hour = hour if hour <= 12 else hour - 12
+    if display_hour == 0:
+        display_hour = 12
+    return f"{display_hour}:{minute:02d} {period}"
+
 class Task:
     def __init__(self, task_id, name, time, priority, frequency, description, is_complete=False):
         self.task_id = task_id
@@ -17,12 +26,7 @@ class Task:
 
     def view_task_details(self):
         """Print all details of the task including time, frequency, priority, and completion status."""
-        hour, minute = map(int, self.time.split(":"))
-        period = "AM" if hour < 12 else "PM"
-        display_hour = hour if hour <= 12 else hour - 12
-        if display_hour == 0:
-            display_hour = 12
-        formatted_time = f"{display_hour}:{minute:02d} {period}"
+        formatted_time = _format_time(self.time)
 
         priority_label = PRIORITY_LABELS.get(self.priority, str(self.priority))
 
@@ -173,6 +177,8 @@ class Schedule:
         task_id = len(pet.tasks) + 1
         new_task = Task(task_id, name, time, priority, frequency, description)
         pet.tasks.append(new_task)
+        if len(pet.tasks) > 1:
+            pet.tasks.sort(key=lambda t: t.time)
         self.tasks.append((new_task, pet))
         print(f"Task '{name}' added for {pet.name}.")
 
@@ -254,14 +260,9 @@ class Schedule:
             else:
                 print("Invalid option. Please try again.")
 
-    def _format_time(self, time_str):
-        """Convert a 24-hour HH:MM string to a 12-hour AM/PM formatted string."""
-        hour, minute = map(int, time_str.split(":"))
-        period = "AM" if hour < 12 else "PM"
-        display_hour = hour if hour <= 12 else hour - 12
-        if display_hour == 0:
-            display_hour = 12
-        return f"{display_hour}:{minute:02d} {period}"
+    def display_time(self, time_str):
+        """Return a 12-hour AM/PM formatted string for the given 24-hour HH:MM input."""
+        return _format_time(time_str)
 
     def _print_task_list(self, task_list, filter_day=None):
         """Print a task list grouped and sorted by day then time; filter_day restricts output to one day."""
@@ -284,19 +285,18 @@ class Schedule:
                 print(f"\n--- {day_label} ---")
                 current_day = day_label
             priority_label = PRIORITY_LABELS.get(task.priority, str(task.priority))
-            print(f"  [{self._format_time(task.time)}] {task.name} — {pet.name} (Priority: {priority_label})")
+            print(f"  [{self.display_time(task.time)}] {task.name} — {pet.name} (Priority: {priority_label})")
 
     def filter_view(self):
         """Prompt the user to choose a filter (priority, name, time, or day) and display matching tasks."""
         while True:
             print("Filter by:")
             print("  1. Priority")
-            print("  2. Name")
+            print("  2. Task Name")
             print("  3. Time")
             print("  4. Day of week")
+            print("  5. Pet name")
             choice = input("Choose an option: ")
-
-            #TODO: add filter by dog name
 
             if choice == "1":
                 print("Select priority:")
@@ -321,6 +321,10 @@ class Schedule:
                 filtered = [(t, p) for t, p in self.tasks if day in t.frequency]
                 self._print_task_list(filtered, filter_day=day)
                 return
+            elif choice == "5":
+                keyword = input("Enter pet name to search: ").strip().lower()
+                filtered = [(t, p) for t, p in self.tasks if keyword in p.name.lower()]
+                break
             else:
                 print("Invalid option. Please try again.")
 

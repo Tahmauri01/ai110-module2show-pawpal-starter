@@ -1,4 +1,5 @@
 import streamlit as st
+from pawpal_system import Owner, Task, Schedule, PRIORITY_LABELS, FREQUENCY_DAYS
 
 st.set_page_config(page_title="PawPal+", page_icon="🐾", layout="centered")
 
@@ -38,33 +39,87 @@ At minimum, your system should:
 
 st.divider()
 
-st.subheader("Quick Demo Inputs (UI only)")
-owner_name = st.text_input("Owner name", value="Jordan")
-pet_name = st.text_input("Pet name", value="Mochi")
-species = st.selectbox("Species", ["dog", "cat", "other"])
+st.subheader("Owner & Pet Setup")
+
+if "owner" not in st.session_state:
+    with st.form("setup_form"):
+        st.markdown("**Owner**")
+        input_owner_name = st.text_input("Owner name", value="Jordan")
+
+        st.markdown("**Pet**")
+        col_a, col_b, col_c = st.columns(3)
+        with col_a:
+            input_pet_name = st.text_input("Pet name", value="Mochi")
+        with col_b:
+            input_pet_age = st.number_input("Age", min_value=0, max_value=30, value=2)
+        with col_c:
+            input_pet_breed = st.text_input("Breed", value="Golden Retriever")
+
+        submitted = st.form_submit_button("Create Owner & Pet")
+
+    if submitted:
+        new_owner = Owner(owner_id=1, name=input_owner_name)
+        new_owner.add_pet(name=input_pet_name, age=int(input_pet_age), breed=input_pet_breed)
+        st.session_state.owner = new_owner
+        st.session_state.schedule = Schedule(
+            schedule_id=1, date="2026-07-03", owner=new_owner
+        )
+        st.rerun()
+    else:
+        st.stop()
+
+owner = st.session_state.owner
+schedule = st.session_state.schedule
+pet = owner.pets[0]
+#TODO: be able to add more pets and switch through them
+
+st.success(f"Owner: **{owner.name}** — Pet: **{pet.name}** ({pet.breed}, age {pet.age})")
 
 st.markdown("### Tasks")
 st.caption("Add a few tasks. In your final version, these should feed into your scheduler.")
 
-if "tasks" not in st.session_state:
-    st.session_state.tasks = []
+PRIORITY_MAP = {"Low": 1, "Medium": 2, "High": 3}
+DAY_REVERSE = {v: k for k, v in FREQUENCY_DAYS.items()}
 
 col1, col2, col3 = st.columns(3)
 with col1:
-    task_title = st.text_input("Task title", value="Morning walk")
+    task_name = st.text_input("Task name", value="Morning walk")
+    task_time = st.text_input("Time (HH:MM, 24-hour)", value="08:00")
 with col2:
-    duration = st.number_input("Duration (minutes)", min_value=1, max_value=240, value=20)
+    task_description = st.text_input("Description", value="")
+    priority_str = st.selectbox("Priority", ["Low", "Medium", "High"], index=2)
 with col3:
-    priority = st.selectbox("Priority", ["low", "medium", "high"], index=2)
+    selected_days = st.multiselect("Frequency", list(FREQUENCY_DAYS.values()))
 
 if st.button("Add task"):
-    st.session_state.tasks.append(
-        {"title": task_title, "duration_minutes": int(duration), "priority": priority}
+    frequency = [DAY_REVERSE[d] for d in selected_days]
+    task_id = len(pet.tasks) + 1
+    new_task = Task(
+        task_id=task_id,
+        name=task_name,
+        time=task_time,
+        priority=PRIORITY_MAP[priority_str],
+        frequency=frequency,
+        description=task_description,
     )
+    pet.tasks.append(new_task)
+    schedule.tasks.append((new_task, pet))
+    st.success(f"Task '{task_name}' added for {pet.name}.")
 
-if st.session_state.tasks:
+if schedule.tasks:
     st.write("Current tasks:")
-    st.table(st.session_state.tasks)
+    rows = []
+    for task, p in schedule.tasks:
+        freq_label = ", ".join(FREQUENCY_DAYS[d] for d in task.frequency) if task.frequency else "—"
+        rows.append({
+            "Task": task.name,
+            "Pet": p.name,
+            "Time": task.time,
+            "Priority": PRIORITY_LABELS[task.priority],
+            "Frequency": freq_label,
+            "Complete": task.is_complete,
+        })
+    st.table(rows)
 else:
     st.info("No tasks yet. Add one above.")
 
