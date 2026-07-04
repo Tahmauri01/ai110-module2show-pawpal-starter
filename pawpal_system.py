@@ -1,5 +1,6 @@
 PRIORITY_LABELS = {1: "Low", 2: "Medium", 3: "High"}
 FREQUENCY_DAYS = {1: "Monday", 2: "Tuesday", 3: "Wednesday", 4: "Thursday", 5: "Friday", 6: "Saturday", 7: "Sunday"}
+ALL_DAYS = set(FREQUENCY_DAYS.keys())
 
 def _format_time(time_str):
     """Convert a 24-hour HH:MM string to a 12-hour AM/PM formatted string."""
@@ -11,18 +12,26 @@ def _format_time(time_str):
     return f"{display_hour}:{minute:02d} {period}"
 
 class Task:
-    def __init__(self, task_id, name, time, priority, frequency, description, is_complete=False):
+    def __init__(self, task_id, name, time, priority, frequency, description, is_daily=False, is_complete=False):
         self.task_id = task_id
         self.name = name
         self.time = time
         self.priority = priority
         self.frequency = frequency
         self.description = description
+        self.is_daily = is_daily
         self.is_complete = is_complete
 
+
     def mark_complete(self):
-        """Mark this task as complete."""
+        """Mark this task as complete and append [COMPLETED] to its name."""
         self.is_complete = True
+        self.name += " [COMPLETED]"
+        #TODO: make completed status only appear on whichever status was chosen for that specific day
+
+    def mark_daily(self):
+        """Mark this task as daily so it appears on every day of the schedule."""
+        self.is_daily = True
 
     def view_task_details(self):
         """Print all details of the task including time, frequency, priority, and completion status."""
@@ -38,6 +47,7 @@ class Task:
         print(f"Frequency:   {frequency_label}")
         print(f"Priority:    {priority_label}")
         print(f"Complete:    {self.is_complete}")
+        print(f"Daily:       {self.is_daily}")
 
     def update_task(self, name=None, time=None, priority=None, frequency=None, description=None):
         """Update any combination of the task's name, time, priority, frequency, or description."""
@@ -176,6 +186,13 @@ class Schedule:
 
         task_id = len(pet.tasks) + 1
         new_task = Task(task_id, name, time, priority, frequency, description)
+
+        conflict = self._check_conflict(new_task)
+        if conflict:
+            conflict_task, conflict_pet, day_names = conflict
+            print(f"Error: '{name}' conflicts with '{conflict_task.name}' ({conflict_pet.name}) at {_format_time(time)} on {day_names}. Task not added.")
+            return
+
         pet.tasks.append(new_task)
         if len(pet.tasks) > 1:
             pet.tasks.sort(key=lambda t: t.time)
@@ -205,6 +222,7 @@ class Schedule:
             print("2. Remove task")
             print("3. Edit existing task")
             print("4. Mark task as complete")
+            print("5. Mark task as daily")
             choice = input("Choose an option: ")
 
             if choice == "1":
@@ -257,8 +275,35 @@ class Schedule:
                 task.mark_complete()
                 print(f"'{task.name}' marked as complete.")
                 break
+            elif choice == "5":
+                if not self.tasks:
+                    print("No tasks to mark as daily.")
+                    return
+
+                print("Which task do you want to mark as daily?")
+                for i, (task, pet) in enumerate(self.tasks, start=1):
+                    print(f"  {i}. {task.name} ({pet.name}) — Daily: {task.is_daily}")
+                task_choice = int(input("Enter number: ")) - 1
+                task, _ = self.tasks[task_choice]
+                task.mark_daily()
+                print(f"'{task.name}' marked as daily.")
+                break
             else:
                 print("Invalid option. Please try again.")
+
+    def _task_days(self, task):
+        """Return the set of day numbers a task is active on, expanding daily tasks to all 7 days."""
+        return ALL_DAYS if task.is_daily else set(task.frequency)
+
+    def _check_conflict(self, new_task):
+        """Return (conflicting_task, conflicting_pet, day_names) if new_task clashes with an existing task, else None."""
+        new_days = self._task_days(new_task)
+        for task, pet in self.tasks:
+            overlap = new_days & self._task_days(task) if task.time == new_task.time else set()
+            if overlap:
+                day_names = ", ".join(FREQUENCY_DAYS[d] for d in sorted(overlap))
+                return task, pet, day_names
+        return None
 
     def display_time(self, time_str):
         """Return a 12-hour AM/PM formatted string for the given 24-hour HH:MM input."""
@@ -273,7 +318,12 @@ class Schedule:
         # Otherwise expand to all days so multi-day tasks appear under each one.
         expanded = []
         for task, pet in task_list:
-            days = [filter_day] if filter_day is not None else task.frequency
+            if filter_day is not None:
+                days = [filter_day]
+            elif task.is_daily:
+                days = list(FREQUENCY_DAYS.keys())
+            else:
+                days = task.frequency
             for day in days:
                 expanded.append((day, task.time, task, pet))
         expanded.sort(key=lambda item: (item[0], item[1]))
@@ -296,6 +346,7 @@ class Schedule:
             print("  3. Time")
             print("  4. Day of week")
             print("  5. Pet name")
+            print("  6. Completion status")
             choice = input("Choose an option: ")
 
             if choice == "1":
@@ -324,6 +375,19 @@ class Schedule:
             elif choice == "5":
                 keyword = input("Enter pet name to search: ").strip().lower()
                 filtered = [(t, p) for t, p in self.tasks if keyword in p.name.lower()]
+                break
+            elif choice == "6":
+                print("Select completion status:")
+                print("  1. Completed")
+                print("  2. Incomplete")
+                status_choice = input("Enter number: ")
+                if status_choice == "1":
+                    filtered = [(t, p) for t, p in self.tasks if t.is_complete]
+                elif status_choice == "2":
+                    filtered = [(t, p) for t, p in self.tasks if not t.is_complete]
+                else:
+                    print("Invalid option. Please try again.")
+                    continue
                 break
             else:
                 print("Invalid option. Please try again.")

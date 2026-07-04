@@ -84,19 +84,26 @@ pytest --cov
 Sample test output:
 
 ```
-# Paste your pytest output here
+================================= test session starts =============================
+platform win32 -- Python 3.11.4, pytest-9.1.1, pluggy-1.6.0
+rootdir: C:\Users\tmbo7\OneDrive\Desktop\ai110-module2show-pawpal-starter
+collected 2 items                                                                                                                                                                                                                            
+
+tests\test_pawpal.py ..                                                                                                                                                                                                                [100%]
+
+================================= 2 passed in 0.03s ==============================
 ```
 
 ## 📐 Smarter Scheduling
 
 > Fill in once you've implemented scheduling logic.
 
-| Feature | Method(s) | Notes |
-|---------|-----------|-------|
-| Task sorting | | e.g., by priority, duration |
-| Filtering | | e.g., skip tasks if time runs out |
-| Conflict handling | | e.g., overlapping time slots |
-| Recurring tasks | | e.g., daily vs. weekly |
+| Feature           | Method(s)           | Notes |
+|-------------------|---------------------|-------|
+| Task sorting      | Compsite Sort       | To sort by the day, a list is used to contain the day, time, task, and pet in a tuple. The sort compares the days(first element [0]) in the tuple and will only look at the time(second element[1]) if the days are equal.|
+| Filtering         | Linear Search       | To create a filtered list, the list containing all the values is looped through. Whichever value matches the value inputted is appended into the filtered list which is then printed. |
+| Conflict handling | Collision Detection | Checks to see if the two times match and gives an error message on the first conflict found |
+| Recurring tasks   | Boolean             | Sets attribute is_daily to True. If an object has it set to true then it will be repeated throughout the week on everyday |
 
 ## 📸 Demo Walkthrough
 

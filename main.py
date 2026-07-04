@@ -6,8 +6,14 @@ owner = Owner(owner_id=1, name="Alex Rivera")
 # Add two pets
 buddy = owner.add_pet(name="Buddy", age=3, breed="Golden Retriever")
 luna  = owner.add_pet(name="Luna",  age=5, breed="Siamese Cat")
+john = owner.add_pet(name = "John", age = 20, breed = "Human")
+mill = owner.add_pet(name = "Mill", age = 2, breed = "hamster")
+
 
 # Add three tasks across the pets with different times and days
+
+
+
 buddy.tasks.append(Task(
     task_id=1,
     name="Morning Walk",
@@ -35,9 +41,29 @@ luna.tasks.append(Task(
     description="Brush coat and trim nails",
 ))
 
+john.tasks.append(Task(
+    task_id=3,
+    name = "eat",
+    time="16:00",
+    priority="low",
+    frequency= [6],
+    description="Has to be fed every week",
+))
+
+mill.tasks.append(Task(
+    task_id=3,
+    name = "run",
+    time="19:00",
+    priority="low",
+    frequency= [6],
+    description="Has to run every week",
+))
+
 # Build and print the schedule
 schedule = Schedule(schedule_id=1, date="2026-07-02", owner=owner)
 schedule.generate_schedule()
 
 print(f"\nSchedule for {owner.name}:")
 schedule.view_schedule()
+schedule.update_schedule()
+

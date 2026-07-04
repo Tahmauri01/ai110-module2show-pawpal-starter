@@ -52,12 +52,22 @@ The Pet class was not linked to the Tasks class so a list had to be created for 
 **a. Constraints and priorities**
 
 - What constraints does your scheduler consider (for example: time, priority, preferences)?
+
+Time, priority, name of pet, name of task, day of the week
+
 - How did you decide which constraints mattered most?
+
+Day and time mattered the most since that is what the tasks are ordered by in that order.
 
 **b. Tradeoffs**
 
 - Describe one tradeoff your scheduler makes.
+
+My scheduler only has specific times instead of having the entire duration of the task.
+
 - Why is that tradeoff reasonable for this scenario?
+
+This is reasonable as it could be implemented later since the program is able to run without it.
 
 ---
 
