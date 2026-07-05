@@ -64,8 +64,11 @@ class Task:
 
 
 class Pet:
-    def __init__(self, pet_id, name, owner_id, age, breed):
-        self.pet_id = pet_id
+    pet_id_counter = 0
+
+    def __init__(self, name, owner_id, age, breed):
+        Pet.pet_id_counter += 1
+        self.pet_id = Pet.pet_id_counter
         self.name = name
         self.owner_id = owner_id
         self.age = age
@@ -107,8 +110,7 @@ class Owner:
 
     def add_pet(self, name, age, breed):
         """Create a new Pet tied to this owner and add it to the owner's pet list."""
-        pet_id = len(self.pets) + 1
-        new_pet = Pet(pet_id, name, self.owner_id, age, breed)
+        new_pet = Pet(name, self.owner_id, age, breed)
         self.pets.append(new_pet)
         return new_pet
 
