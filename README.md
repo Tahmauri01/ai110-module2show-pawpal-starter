@@ -89,10 +89,33 @@ platform win32 -- Python 3.11.4, pytest-9.1.1, pluggy-1.6.0
 rootdir: C:\Users\tmbo7\OneDrive\Desktop\ai110-module2show-pawpal-starter
 collected 2 items                                                                                                                                                                                                                            
 
-tests\test_pawpal.py ..                                                                                                                                                                                                                [100%]
+tests\test_pawpal.py ..                                                 [100%]
 
 ================================= 2 passed in 0.03s ==============================
 ```
+
+================================== test session starts ===================================
+platform win32 -- Python 3.11.4, pytest-9.1.1, pluggy-1.6.0
+rootdir: C:\Users\tmbo7\OneDrive\Desktop\ai110-module2show-pawpal-starter
+collected 23 items                                                                                                                                                                                                                           
+
+tests\test_pawpal.py .......................                                          [100%]
+
+================================== 23 passed in 0.05s =================================
+
+Tests include checking if these work:
+- Time format
+- Mark complete twice
+- Conflict detection
+- Days of week correctness
+- Duplicate IDs after deleting then adding Pet
+- Sorting by day and time
+- Filtering by different attributes
+- Schedule generation and regeneration
+
+Confidence Level - 4/5 Stars
+
+
 
 ## 📐 Smarter Scheduling
 
@@ -109,10 +132,11 @@ tests\test_pawpal.py ..                                                         
 
 Describe your app in numbered steps so a reader can follow along without watching a video:
 
-1. <!-- Describe this step -->
-2. <!-- Describe this step -->
-3. <!-- Describe this step -->
-4. <!-- Describe this step -->
-5. <!-- Add more steps as needed -->
+1. Create an owner and a pet with it's age and breed
+2. Create a task for your pet including the name, time, day, description, and priority
+3. Add as much pets as you need and switch between them to add their tasks
+4. Generate a schedule based on all of your pet's tasks, sorted by day then time, including conflict warnings for overalapping tasks
+5. Filter your schedule by day, time, name, pet name, priority, or completion
+6. Update your schedule by removing/adding tasks, editing a task, marking a task as daily, or marking a task as complete
 
 **Screenshot or video** *(optional)*: <!-- Insert a screenshot or link to a demo video here -->

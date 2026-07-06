@@ -76,12 +76,22 @@ This is reasonable as it could be implemented later since the program is able to
 **a. How you used AI**
 
 - How did you use AI tools during this project (for example: design brainstorming, debugging, refactoring)?
+
+I used AI tools to brainstorm the UML diagram and debug code.
+
 - What kinds of prompts or questions were most helpful?
+
+The prompts where I was most descriptive and specific in what I wanted to do were most helpful.
 
 **b. Judgment and verification**
 
 - Describe one moment where you did not accept an AI suggestion as-is.
+
+When updating the UI for the app using streamlit, the AI suggested I use a dataframe instead of a table, which I did not accept.
+
 - How did you evaluate or verify what the AI suggested?
+
+I evaluated what the AI suggested by testing the app manually, creating tasks and generating a schedule to see how it looked while displayed.
 
 ---
 
@@ -90,12 +100,29 @@ This is reasonable as it could be implemented later since the program is able to
 **a. What you tested**
 
 - What behaviors did you test?
+
+- Time format
+- Mark complete twice
+- Conflict detection
+- Days of week correctness
+- Duplicate IDs after deleting then adding Pet
+- Sorting by day and time
+- Filtering by different attributes
+- Schedule generation and regeneration
+
 - Why were these tests important?
+
+These tests were important because they are the fundamental systems of the app, and if one is broken then the whole app is likely not to work.
 
 **b. Confidence**
 
 - How confident are you that your scheduler works correctly?
+
+I am fairly confident my scheduler works correctly, 5/5
+
 - What edge cases would you test next if you had more time?
+
+If I had more time I would test adding different owners.
 
 ---
 
@@ -105,10 +132,16 @@ This is reasonable as it could be implemented later since the program is able to
 
 - What part of this project are you most satisfied with?
 
+I am most satisfied with the filtering system implemented
+
 **b. What you would improve**
 
 - If you had another iteration, what would you improve or redesign?
 
+If I had another iteration, I would improve how the UI looks since it is a little bland and uningaging.
+
 **c. Key takeaway**
 
 - What is one important thing you learned about designing systems or working with AI on this project?
+
+I learned that when working with AI, it is best to know exactly what you want from it and how to describe it. This will give you the best results.

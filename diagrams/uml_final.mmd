@@ -1,0 +1,65 @@
+classDiagram
+    note "Module-level constants and utility\nPRIORITY_LABELS: dict~int,string~\nFREQUENCY_DAYS: dict~int,string~\nALL_DAYS: set~int~\n_format_time(timeStr) string"
+
+    class Task {
+        +int taskId
+        +string name
+        +string time
+        +int priority
+        +List~int~ frequency
+        +string description
+        +bool isComplete
+        +bool isDaily
+        +markComplete() void
+        +markDaily() void
+        +viewTaskDetails() void
+        +updateTask(name, time, priority, frequency, description) void
+    }
+
+    class Pet {
+        +int petId
+        +int ownerId
+        +string name
+        +int age
+        +string breed
+        +List~Task~ tasks
+        +updatePet(name, age, breed) void
+        +viewPetDetails(owner) void
+        +viewPetTasks() void
+    }
+
+    class Owner {
+        +int ownerId
+        +string name
+        +List~Pet~ pets
+        +addPet(name, age, breed) Pet
+        +removePet(petId) void
+        +updateOwner(name, addPet, removePetId) void
+        +viewOwnerDetails() void
+        +viewOwnerPets() void
+    }
+
+    class Schedule {
+        +int scheduleId
+        +string date
+        +Owner owner
+        +List~TaskPetPair~ tasks
+        +generateSchedule() void
+        +addTask() void
+        +removeTask() void
+        +updateSchedule() void
+        +viewSchedule() void
+        +filterView() void
+        +checkConflict(task) tuple
+        +taskDays(task) set
+        +displayTime(time) string
+        -printTaskList(taskList, filterDay) void
+        -formatTime(timeStr) string
+    }
+
+    note for Schedule "tasks stores (Task, Pet) tuples\nso each task stays linked to its pet"
+
+    Owner "1" --> "0..*" Pet : owns
+    Pet "1" --> "0..*" Task : has
+    Schedule "1" --> "1" Owner : assigned to
+    Schedule "1" --> "0..*" Task : contains via tuples
