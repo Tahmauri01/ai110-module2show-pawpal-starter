@@ -122,7 +122,7 @@ I am fairly confident my scheduler works correctly, 5/5
 
 - What edge cases would you test next if you had more time?
 
-If I had more time I would test adding different owners.
+If I had more time I would test multiple different owners, and having no owners but having pets.
 
 ---
 
@@ -132,7 +132,7 @@ If I had more time I would test adding different owners.
 
 - What part of this project are you most satisfied with?
 
-I am most satisfied with the filtering system implemented
+I am most satisfied with the filtering system implemented since it worked as I intended it to.
 
 **b. What you would improve**
 
